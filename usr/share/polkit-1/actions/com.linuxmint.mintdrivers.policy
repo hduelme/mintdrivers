@@ -8,6 +8,8 @@
   <vendor_url>https://linuxmint.com/</vendor_url>
   <action id="com.linuxmint.mintdrivers">
 <message>Mount installation media</message>
+<message xml:lang="ar">ربط وسائط التثبيت</message>
+<message xml:lang="ast">Montar discu d'instalación</message>
 <message xml:lang="be">Прымантаваць загрузачны дыск</message>
 <message xml:lang="bg">Монтирайте инсталационен носител</message>
 <message xml:lang="ca">Munta el suport d'instal·lació</message>
@@ -22,10 +24,11 @@
 <message xml:lang="et">Paigaldusmeediumi haakimine</message>
 <message xml:lang="eu">Muntatu instalazio-euskarria</message>
 <message xml:lang="fa">سوارکردن رسانه نصب</message>
-<message xml:lang="fi">Liitä asennusmedia</message>
-<message xml:lang="fr">Monter le périphérique d'installation</message>
+<message xml:lang="fi">Kytke Linux Mintin asennusmedia tietokoneeseen ajurien asentamiseksi</message>
+<message xml:lang="fr">Monter le support d’installation</message>
 <message xml:lang="fr_CA">Montage du média d'installation</message>
-<message xml:lang="he">עגינת מדית התקנה</message>
+<message xml:lang="he">עגינת אמצעי התקנה</message>
+<message xml:lang="hi">माउंट स्थापना मीडिया</message>
 <message xml:lang="hr">Montiraj instalacijski medij</message>
 <message xml:lang="hu">A telepítési adathordozó felcsatolása</message>
 <message xml:lang="ia">Montar medios de installation</message>
@@ -36,8 +39,13 @@
 <message xml:lang="ka">დასაყენებელი მედიის მიმაგრება</message>
 <message xml:lang="ko">설치 미디어 탑재</message>
 <message xml:lang="la">Media intructionis collige</message>
+<message xml:lang="lo">ເຊື່ອມຕໍ່ສື່ການຕິດຕັ້ງ</message>
 <message xml:lang="lt">Montuoti įdiegimo laikmeną</message>
+<message xml:lang="lv">Montēt instalācijas datu nesēju</message>
+<message xml:lang="ms">Lekapkan media pemasangan</message>
+<message xml:lang="nb">Monter installasjonsmedium</message>
 <message xml:lang="nl">Installatiemedium koppelen</message>
+<message xml:lang="nn">Monter installasjonsmedium</message>
 <message xml:lang="oc">Montar lo mèdia d’installacion</message>
 <message xml:lang="pl">Zamontuj nośnik instalacyjny</message>
 <message xml:lang="pt">Montar meio de instalação</message>
@@ -46,12 +54,18 @@
 <message xml:lang="ru">Подсоединить установочный носитель</message>
 <message xml:lang="sk">Pripojte inštalačné médium</message>
 <message xml:lang="sl">Priklopi nosilec namestitve</message>
+<message xml:lang="sq">Montoni median e instalimit</message>
 <message xml:lang="sr">Прикачи инсталациони медиј</message>
 <message xml:lang="sr@latin">Прикачи инсталациони медиј</message>
 <message xml:lang="sv">Montera installationsmedia</message>
+<message xml:lang="te">సంస్థాపనా మాధ్యమాన్ని మౌంట్ చేయండి</message>
+<message xml:lang="th">ทำการเมานท์สื่อติดตั้ง</message>
 <message xml:lang="tr">Kurulum ortamını takın</message>
 <message xml:lang="uk">Змонтувати інсталяційний носій</message>
 <message xml:lang="uz">O‘rnatish diskini ulash</message>
+<message xml:lang="vi">Gắn phương tiện cài đặt</message>
+<message xml:lang="zh_CN">挂载安装介质</message>
+<message xml:lang="zh_TW">掛載安裝媒體</message>
 
     <icon_name>mintdrivers</icon_name>
     <defaults>

@@ -17,7 +17,7 @@ from gi.repository import PackageKitGlib as packagekit
 from UbuntuDrivers import detect
 import psutil
 import re
-import urllib
+import socket
 import threading
 
 # Used as a decorator to run things in the background
@@ -96,6 +96,7 @@ class Application:
         self.progress_bar.set_visible(False)
 
         self.needs_restart = False
+        self.needs_broadcom_reload = False
         self.live_mode = False
 
         self.show_page("refresh_page")
@@ -158,19 +159,12 @@ class Application:
     def cleanup_live_media(self):
         subprocess.call(["sudo", "mintdrivers-remove-live-media"])
 
-    def check_connectivity(self, reference):
-        try:
-            urllib.request.urlopen(reference, timeout=10)
-            return True
-        except:
-            return False
-
     @idle
     def check_internet_or_live_media(self, widget=None):
         self.show_page("refresh_page")
         print ("Checking Internet connectivity...")
         try:
-            urllib.request.urlopen("http://archive.ubuntu.com", timeout=10)
+            socket.create_connection(("archive.ubuntu.com", 443), timeout=10)
             # We're online
             print ("  --> Computer is online")
             self.update_cache()
@@ -253,6 +247,9 @@ class Application:
                 self.button_driver_apply.set_sensitive(bool(self.driver_changes))
 
         if installs is None or len(installs) == 0 or errors:
+            if self.needs_broadcom_reload:
+                print("Reloading Broadcom modules")
+                subprocess.call(["sudo", "mintdrivers-load-broadcom-modules"])
             self.needs_restart = (not errors)
             self.progress_bar.set_visible(False)
             self.apt_cache = apt.Cache()
@@ -291,6 +288,8 @@ class Application:
                             removals.append(self.get_package_id(dep_pkg.installed))
             else:
                 installs.append(self.get_package_id(pkg.candidate))
+                if pkg.shortname == "broadcom-sta-dkms":
+                    self.needs_broadcom_reload = True
 
         self.cancellable = Gio.Cancellable()
         try:
@@ -452,26 +451,58 @@ class Application:
         except KeyError:
             pass
 
-        # -open nvidia drivers are recommended now over normal ones. Go thru the list and get the version of the recommended one,
-        # then we can flag the non-'open' one instead.
-        new_recommended = None
-        for pkg_driver_name in device['drivers']:
-            current_driver = device['drivers'][pkg_driver_name]
-            try:
-                if current_driver['recommended'] and current_driver['from_distro']:
-                    driver_status = 'recommended'
-                    if pkg_driver_name.endswith("-open"):
-                        new_recommended = pkg_driver_name.replace("-open", "")
-            except KeyError:
-                pass
+        """
+        - Never show server drivers.
+        - Pre 560: closed source drivers are recommended. Override any recommended -open drivers with the closed
+          source equivalent.
+        - Post 560 (02/13/2025: open-source drivers are recommended by their devs, and closed source drivers may
+          not be available for a given version.
+        """
+        ignored = []
 
         for pkg_driver_name in device['drivers']:
+            if not pkg_driver_name.startswith("nvidia-"):
+                continue
+            if pkg_driver_name in ignored:
+                print("Skipping ignored NVIDIA driver '%s'" % pkg_driver_name)
+                continue
+            if pkg_driver_name.endswith(("-server", "-server-open")):
+                print("Ignoring server NVIDIA driver '%s'" % pkg_driver_name)
+                ignored.append(pkg_driver_name)
+                continue
+
+            try:
+                version = int(re.search(r"nvidia-driver-([0-9]{3}).*", pkg_driver_name).groups()[0])
+                open_preferred = version >= 560
+            except:
+                open_preferred = False
+
+            is_open = pkg_driver_name.endswith("-open")
+            current_driver = device['drivers'][pkg_driver_name]
+            recommended = current_driver.get("recommended", False) and current_driver.get("from_distro", False)
+
+            if is_open:
+                closed_name = pkg_driver_name.replace("-open", "")
+                has_closed = closed_name in device['drivers']
+                if has_closed:
+                    if open_preferred:
+                        print("Ignoring closed NVIDIA driver '%s' as the open one is preferred." % closed_name)
+                        ignored.append(closed_name)
+                    else:
+                        print("Ignoring open NVIDIA driver '%s' as a closed one exists and is preferred." % pkg_driver_name)
+                        if recommended:
+                            device['drivers'][closed_name]["recommended"] = True
+                        ignored.append(pkg_driver_name)
+
+        for pkg_driver_name in device['drivers']:
+            if pkg_driver_name in ignored:
+                continue
             current_driver = device['drivers'][pkg_driver_name]
 
             # get general status
             driver_status = 'alternative'
             try:
-                if (current_driver['recommended'] and current_driver['from_distro']) or pkg_driver_name == new_recommended:
+                if (current_driver['recommended'] and current_driver['from_distro']):
                     driver_status = 'recommended'
             except KeyError:
                 pass
@@ -498,7 +529,7 @@ class Application:
                 description_line3 = "<small>%s</small>" % summary
                 if driver_status == 'recommended':
                     description_line1 = "%s <b><small><span foreground='#58822B'>(%s)</span></small></b>" % (description_line1, _("recommended"))
-                if current_driver['free'] and pkg.shortname != "bcmwl-kernel-source" and (not pkg.shortname.startswith("nvidia-")):
+                if current_driver['free'] and pkg.shortname != "broadcom-sta-dkms" and (not pkg.shortname.startswith("nvidia-")):
                     description_line1 = "%s <b><small><span foreground='#717bbd'>(%s)</span></small></b>" % (description_line1, _("open-source"))
                 if pkg.shortname.startswith("firmware-b43"):
                     # B43 requires a connection to the Internet
@@ -651,9 +682,6 @@ class Application:
                 # define the order of introspection
                 for section in ('recommended', 'alternative', 'manually_installed', 'no_driver'):
                     for driver in sorted(drivers[section], key=lambda x: self.sort_string(drivers[section], x), reverse=True):
-                        if str(driver).startswith("nvidia-driver") and str(driver).endswith(("-server", "-open")):
-                            print("Ignoring server or open NVIDIA driver: ", driver)
-                            continue
                         radio_button = Gtk.RadioButton.new(None)
                         label = Gtk.Label()
                         label.set_markup(drivers[section][driver]['description'])
@@ -718,7 +746,7 @@ class Application:
         for device in self.devices:
             for pkg_name in self.devices[device]['drivers']:
                 pkg = self.apt_cache[pkg_name]
-                if (not self.devices[device]['drivers'][pkg_name]['free'] or pkg_name == "bcmwl-kernel-source") and pkg.is_installed:
+                if (not self.devices[device]['drivers'][pkg_name]['free'] or pkg_name == "broadcom-sta-dkms") and pkg.is_installed:
                     self.nonfree_drivers = self.nonfree_drivers + 1
 
         if self.nonfree_drivers > 0:

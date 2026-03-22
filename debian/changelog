@@ -1,3 +1,118 @@
+mintdrivers (1.8.8) zena; urgency=medium
+
+  * Connectivity test: Test the repo and port 443
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 16 Jan 2026 10:54:33 +0000
+
+mintdrivers (1.8.7) zena; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 08 Jan 2026 16:08:07 +0000
+
+mintdrivers (1.8.6) zena; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Fri, 12 Dec 2025 16:55:44 +0000
+
+mintdrivers (1.8.5) zena; urgency=medium
+
+  [ Clement Lefebvre ]
+  * Switch to XApp symbolic icons
+  * Switch to XSI
+
+  [ rreyn331 ]
+  * Update control (#106)
+
+  [ Clement Lefebvre ]
+  * Connectivity test: Switch to socket
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 11 Dec 2025 15:16:22 +0000
+
+mintdrivers (1.8.4) zara; urgency=medium
+
+  * Connectivity test: Switch to https
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 01 Sep 2025 18:38:02 +0200
+
+mintdrivers (1.8.3) zara; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 26 Aug 2025 17:48:22 +0200
+
+mintdrivers (1.8.2) zara; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 31 Jul 2025 11:50:55 +0200
+
+mintdrivers (1.8.1) xia; urgency=medium
+
+  [ Michael Webster ]
+  * Add github workflow.
+  * Update how nvidia drivers are filtered, to align with upstream (#104)
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 03 Mar 2025 10:33:46 +0000
+
+mintdrivers (1.8.0) xia; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 06 Jan 2025 14:05:19 +0000
+
+mintdrivers (1.7.9) xia; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Thu, 05 Dec 2024 10:45:10 +0000
+
+mintdrivers (1.7.8) wilma; urgency=medium
+
+  [ villamorrd ]
+  * Use current branding for NVIDIA (#98)
+
+  [ Clement Lefebvre ]
+  * broadcom: mintdrivers-load-broadcom-modules needs elevated privs
+
+ -- Clement Lefebvre <root@linuxmint.com>  Sun, 21 Jul 2024 13:44:09 +0100
+
+mintdrivers (1.7.7) wilma; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Sun, 21 Jul 2024 10:33:59 +0100
+
+mintdrivers (1.7.6) wilma; urgency=medium
+
+  * l10n: Update translations
+  * l10n: Update files
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 18 Jun 2024 19:35:39 +0100
+
+mintdrivers (1.7.5) wilma; urgency=medium
+
+  [ Michael Webster ]
+  * polkit: Remove restrictions for remote/non-active sessions.
+
+ -- Clement Lefebvre <root@linuxmint.com>  Tue, 11 Jun 2024 14:34:47 +0100
+
+mintdrivers (1.7.4) wilma; urgency=medium
+
+  * mintdrivers-add-live-media: Don't hardcode release/components
+  * broadcom: Refer to the new pkg name
+  * broadcom: Reload modules after installation
+
+ -- Clement Lefebvre <root@linuxmint.com>  Mon, 15 Apr 2024 15:57:19 +0100
+
 mintdrivers (1.7.3) virginia; urgency=medium
 
   * add-live-media: Use .disk/info to ID the live media
